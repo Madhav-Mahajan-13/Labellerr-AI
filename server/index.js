@@ -1,23 +1,26 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv'; 
+import ocrRouter from './routes/Route.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS configuration
 const corsOptions = {
-    origin: process.env.CLIENT_URL || 'http://localhost:3000', // Your frontend URL
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // Allow cookies to be sent
+    credentials: true,
     optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// Register routes BEFORE app.listen()
+app.use('/api', ocrRouter);
 
 app.get('/', (req, res) => {
     res.json({ status: 'ok', port: PORT });
