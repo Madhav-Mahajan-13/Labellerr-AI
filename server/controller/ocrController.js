@@ -73,6 +73,34 @@ export const extractText = async (req, res) => {
         const fullText = textChunks.join('\n');
         console.log('Extracted text:', fullText);
 
+        // Create data directory if it doesn't exist
+        const dataDir = path.join(process.cwd(), 'data');
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+        }
+
+        // Path to the single JSON file
+        const jsonFilePath = path.join(dataDir, 'extracted_data.json');
+
+        // Read existing data or create new array
+        let allData = [];
+        if (fs.existsSync(jsonFilePath)) {
+            const existingContent = fs.readFileSync(jsonFilePath, 'utf-8');
+            allData = JSON.parse(existingContent);
+        }
+
+        // Add new entry
+        const newEntry = {
+            fileName: fileName,
+            timestamp: new Date().toISOString(),
+            documentText: fullText
+        };
+        allData.push(newEntry);
+
+        // Save back to file
+        fs.writeFileSync(jsonFilePath, JSON.stringify(allData, null, 2), 'utf-8');
+        console.log('Data appended to:', jsonFilePath);
+
         // Clean up files
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
@@ -83,7 +111,10 @@ export const extractText = async (req, res) => {
             }
         }
 
-        res.json({ text: fullText });
+        res.json({ 
+            text: fullText,
+            jsonFile: jsonFilePath 
+        });
 
     } catch (error) {
         console.error('Error extracting text:', error);
