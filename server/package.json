@@ -1,0 +1,24 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "Labellerr ai assignment"
+  },
+  "license": "ISC",
+  "author": "Madhav Mahajan",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon server.js"
+  },
+  "dependencies": {
+    "axios": "^1.13.4",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
+    "tesseract.js": "^7.0.0"
+  }
+}
