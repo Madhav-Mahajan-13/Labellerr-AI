@@ -91,6 +91,7 @@ export const extractText = async (req, res) => {
 
         // Add new entry
         const newEntry = {
+            chatId: `chat_${Math.random().toString(36).substr(2, 9)}`, // Added generic random chat ID
             fileName: fileName,
             timestamp: new Date().toISOString(),
             documentText: fullText
