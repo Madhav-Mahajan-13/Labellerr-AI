@@ -7,26 +7,10 @@ A web-based document intelligence system that allows users to upload documents (
 ![OCR](https://img.shields.io/badge/OCR-Tesseract.js-blue)
 ![AI](https://img.shields.io/badge/AI-Google%20Gemini-orange)
 
-## 📋 Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Setup Instructions](#setup-instructions)
-- [API Documentation](#api-documentation)
-- [Environment Configuration](#environment-configuration)
-- [Usage Examples](#usage-examples)
-- [Technical Decisions](#technical-decisions)
-- [Challenges & Solutions](#challenges--solutions)
-- [Screenshots](#screenshots)
-
 ## 🎯 Overview
 
 This project was developed as part of a technical assignment for the Software Engineering Intern (AI/Computer Vision) position. The system demonstrates the integration of OCR technology and AI-powered natural language processing to create an intelligent document interaction platform.
 
-**Assignment Duration:** 2 Days  
-**Difficulty Level:** Intermediate
 
 ## ✨ Features
 
@@ -48,7 +32,7 @@ This project was developed as part of a technical assignment for the Software En
 - CORS configuration for frontend integration
 
 ### Frontend Features
-- File upload interface (to be integrated)
+- File upload interface 
 - Extracted text display
 - Interactive chat interface
 - Message history display
@@ -102,6 +86,7 @@ Display in Chat Interface
 
 ```
 document-intelligence-system/
+├── document chat frontend/
 ├── server/
 │   ├── controller/
 │   │   ├── ocrController.js      # OCR and text extraction logic
@@ -202,49 +187,9 @@ http://localhost:5000/api
 - Body:
   - `file` (required): Document file (JPG, PNG, PDF, WEBP)
 
-**Example using cURL:**
-```bash
-curl -X POST http://localhost:5000/api/ocr \
-  -F "file=@/path/to/document.pdf"
-```
+**Example using PostMan:**
+<img width="1915" height="1018" alt="image" src="https://github.com/user-attachments/assets/fe7b4261-d3ae-4f12-8bb9-be8dbfb6d60f" />
 
-**Example using JavaScript (fetch):**
-```javascript
-const formData = new FormData();
-formData.append('file', fileInput.files[0]);
-
-const response = await fetch('http://localhost:5000/api/ocr', {
-  method: 'POST',
-  body: formData
-});
-
-const data = await response.json();
-console.log(data);
-```
-
-**Response (Success - 200):**
-```json
-{
-  "chatId": "chat_8uv3duhku",
-  "text": "Extracted text content from the document...",
-  "jsonFile": "/path/to/data/extracted_data.json"
-}
-```
-
-**Response (Error - 400):**
-```json
-{
-  "error": "No file uploaded"
-}
-```
-
-**Response (Error - 500):**
-```json
-{
-  "error": "Failed to extract text from the uploaded file",
-  "details": "Error message details"
-}
-```
 
 ---
 
@@ -265,61 +210,9 @@ console.log(data);
   }
   ```
 
-**Example using cURL:**
-```bash
-curl -X POST http://localhost:5000/api/ai-chat \
-  -H "Content-Type: application/json" \
-  -d '{
-    "chat_id": "chat_8uv3duhku",
-    "message": "Summarize the key points"
-  }'
-```
+**Example using PostMan:**
+<img width="1919" height="1018" alt="image" src="https://github.com/user-attachments/assets/4988c9cd-6431-46a3-bda7-1c431e5358a3" />
 
-**Example using JavaScript (fetch):**
-```javascript
-const response = await fetch('http://localhost:5000/api/ai-chat', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    chat_id: 'chat_8uv3duhku',
-    message: 'What are the main points?'
-  })
-});
-
-const data = await response.json();
-console.log(data.response);
-```
-
-**Response (Success - 200):**
-```json
-{
-  "response": "Based on the document, the main topic is... [AI-generated response]"
-}
-```
-
-**Response (Error - 400):**
-```json
-{
-  "error": "Missing chat_id or message"
-}
-```
-
-**Response (Error - 404):**
-```json
-{
-  "error": "Chat ID not found"
-}
-```
-
-**Response (Error - 500):**
-```json
-{
-  "error": "Failed to generate AI response",
-  "details": "Error message details"
-}
-```
 
 ---
 
@@ -364,87 +257,22 @@ FRONTEND_URL=http://localhost:5173
 - 1,500 requests per day
 - Suitable for development and testing
 
-## 📝 Usage Examples
 
-### Sample Test Scenarios
-
-#### 1. Receipt Document Processing
-
-**Upload Receipt:**
-```javascript
-// Upload receipt image
-const receiptFile = document.querySelector('#fileInput').files[0];
-const formData = new FormData();
-formData.append('file', receiptFile);
-
-const uploadResponse = await fetch('http://localhost:5000/api/ocr', {
-  method: 'POST',
-  body: formData
-});
-
-const { chatId, text } = await uploadResponse.json();
-```
-
-**Query Receipt Data:**
-```javascript
-// Query 1: Total amount
-await chatWithDocument(chatId, "What is the total amount on this receipt?");
-
-// Query 2: Store name
-await chatWithDocument(chatId, "Which store issued this receipt?");
-
-// Query 3: Purchase date
-await chatWithDocument(chatId, "What is the purchase date?");
-
-// Query 4: Item list
-await chatWithDocument(chatId, "List the items purchased.");
-```
-
-#### 2. Identification Document Processing
-
-**Upload ID Document:**
-```javascript
-const idFile = document.querySelector('#fileInput').files[0];
-const formData = new FormData();
-formData.append('file', idFile);
-
-const uploadResponse = await fetch('http://localhost:5000/api/ocr', {
-  method: 'POST',
-  body: formData
-});
-
-const { chatId, text } = await uploadResponse.json();
-```
-
-**Query ID Information:**
-```javascript
-// Query 1: Name
-await chatWithDocument(chatId, "What name appears on this document?");
-
-// Query 2: ID number
-await chatWithDocument(chatId, "What is the identification number?");
-
-// Query 3: Expiration
-await chatWithDocument(chatId, "When does this document expire?");
-```
 
 ### Helper Function for Chat
 ```javascript
-async function chatWithDocument(chatId, message) {
-  const response = await fetch('http://localhost:5000/api/ai-chat', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      chat_id: chatId,
-      message: message
-    })
-  });
-  
-  const data = await response.json();
-  console.log('AI Response:', data.response);
-  return data.response;
+function getExtractedDataByChatId(chatId) {
+    try {
+        if (!fs.existsSync(jsonFilePath)) {
+            return null;
+        }
+        const fileContent = fs.readFileSync(jsonFilePath, 'utf-8');
+        const allData = JSON.parse(fileContent);
+        return allData.find(item => item.chatId === chatId) || null;
+    } catch (error) {
+        console.error('Error reading extracted data:', error);
+        throw new Error('Failed to read extracted data');
+    }
 }
 ```
 
@@ -561,15 +389,6 @@ for (const imgPath of pdfImagePaths) {
 }
 ```
 
-### Challenge 4: Chat Context Retrieval
-
-**Problem:** Efficiently finding document text for a specific chat session.
-
-**Solution:**
-- Implemented `getExtractedDataByChatId()` helper function
-- Uses Array.find() for O(n) lookup
-- Returns null if chat ID not found
-- Proper error handling for missing files
 
 ### Challenge 5: CORS Configuration
 
@@ -597,15 +416,18 @@ const corsOptions = {
 ```
 Server is running on port 5000
 ```
+<img width="1919" height="980" alt="image" src="https://github.com/user-attachments/assets/c6e7493f-2907-4f9d-8f55-776d5df78b96" />
 
 ### 2. Successful Document Upload
 ```json
 {
-  "chatId": "chat_8uv3duhku",
-  "text": "Priyanka slams PM over Epstein row no-show...",
-  "jsonFile": "/path/to/data/extracted_data.json"
+    "chatId": "chat_7mfqal5g9",
+    "text": "Priyanka slams PM over Epstein row no-\nshow\n\n- Opposition accuses PM of avoiding debate\n\n- Congress pushes Epstein files discussion\n\n+ Rahul Gandhi alleges PM is compromised\n\n« Speaker cites security threat, Priyanka calls it a lie |\n",
+    "jsonFile": "C:\\Users\\Madhav\\OneDrive\\Desktop\\main_project\\Labellerr AI\\server\\data\\extracted_data.json"
 }
 ```
+<img width="861" height="829" alt="image" src="https://github.com/user-attachments/assets/53ea6f39-34f8-4661-968d-ba5cf947b4d0" />
+
 
 ### 3. AI Chat Response
 ```json
@@ -613,6 +435,7 @@ Server is running on port 5000
   "response": "Based on the document, Priyanka is criticizing the Prime Minister for not showing up to a debate regarding the Epstein controversy. The opposition has accused the PM of avoiding the debate, while Congress is pushing for a discussion on the Epstein files..."
 }
 ```
+<img width="1181" height="876" alt="image" src="https://github.com/user-attachments/assets/718db226-2578-4e88-8e35-5f0627eba0f6" />
 
 ### 4. Data Storage (extracted_data.json)
 ```json
@@ -648,59 +471,7 @@ Server is running on port 5000
    }
    ```
 
-### Using cURL
 
-```bash
-# Upload document
-curl -X POST http://localhost:5000/api/ocr \
-  -F "file=@/path/to/document.pdf"
-
-# Chat with document
-curl -X POST http://localhost:5000/api/ai-chat \
-  -H "Content-Type: application/json" \
-  -d '{
-    "chat_id": "chat_8uv3duhku",
-    "message": "Summarize the key points"
-  }'
-```
-
-## 🔒 Security Considerations
-
-### Current Implementation
-- File type validation (JPG, PNG, PDF, WEBP only)
-- File size limit (5MB maximum)
-- Error handling for malformed requests
-- Environment variables for sensitive data
-
-### Recommended for Production
-- [ ] Implement user authentication
-- [ ] Add rate limiting
-- [ ] Sanitize file uploads
-- [ ] Implement API key rotation
-- [ ] Add request validation middleware
-- [ ] Set up logging and monitoring
-- [ ] Use HTTPS in production
-- [ ] Implement file scanning for malware
-
-## 🚀 Future Enhancements
-
-### Short-term Improvements
-- [ ] Add frontend application (React/Vue)
-- [ ] Implement real-time progress indicators
-- [ ] Add document preview functionality
-- [ ] Support for more file formats
-- [ ] Batch upload capability
-
-### Long-term Enhancements
-- [ ] Database integration (MongoDB/PostgreSQL)
-- [ ] User authentication and authorization
-- [ ] Document versioning
-- [ ] Advanced search capabilities
-- [ ] Export chat history
-- [ ] Multi-language OCR support
-- [ ] Cloud storage integration
-- [ ] Document comparison features
-- [ ] Mobile application
 
 ## 📚 Documentation & Resources
 
@@ -719,26 +490,12 @@ This project is created for educational and assignment purposes.
 
 ## 👨‍💻 Author
 
-**Your Name**  
-Software Engineering Intern Assignment  
-Position: AI/Computer Vision
+MADHAV MAHAJAN
 
-## 🙏 Acknowledgments
-
-- Labellerr AI for the technical assignment
-- Google for Gemini AI API
-- Tesseract OCR community
-- Express.js and Node.js communities
 
 ---
 
-## 📞 Contact & Support
 
-For questions or support regarding this assignment:
-
-**Email:** [Your Email]  
-**GitHub:** [Your GitHub Profile]  
-**Demo Video:** [Video Link]
 
 ---
 
