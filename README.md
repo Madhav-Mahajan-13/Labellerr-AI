@@ -390,7 +390,7 @@ for (const imgPath of pdfImagePaths) {
 ```
 
 
-### Challenge 5: CORS Configuration
+### Challenge 4: CORS Configuration
 
 **Problem:** Frontend requests blocked by CORS policy.
 
