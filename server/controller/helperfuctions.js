@@ -44,6 +44,6 @@ export function getAllExtractedData() {
     }
 }
 
-console.log('', getExtractedDataByChatId('chat_7mfqal5g9'));
+// console.log('', getExtractedDataByChatId('chat_7mfqal5g9'));
 
 
