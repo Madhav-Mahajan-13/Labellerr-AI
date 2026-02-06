@@ -71,7 +71,7 @@ export const extractText = async (req, res) => {
         }
 
         const fullText = textChunks.join('\n');
-        console.log('Extracted text:', fullText);
+        // console.log('Extracted text:', fullText);
 
         // Create data directory if it doesn't exist
         const dataDir = path.join(process.cwd(), 'data');

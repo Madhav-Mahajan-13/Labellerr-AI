@@ -11,6 +11,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [chat_id, setChatId] = useState(null);
 
   const uploadDocument = async () => {
     if (!file) {
@@ -27,6 +28,7 @@ export default function App() {
       });
       const data = await res.json();
       setExtractedText(data.text || "No text extracted");
+      setChatId(data.chatId); // Store chat_id for later use in chat
       setMessages([]);
     } catch (err) {
       console.error(err);
@@ -36,29 +38,42 @@ export default function App() {
     }
   };
 
-  const sendQuestion = async () => {
-    if (!question.trim()) return;
-    const userMessage = { role: "user", content: question };
-    setMessages((prev) => [...prev, userMessage]);
-    setQuestion("");
-    setLoading(true);
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
-      });
-      const data = await res.json();
-      const botMessage = { role: "bot", content: data.answer };
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (err) {
-      console.error(err);
-      const errorMessage = { role: "bot", content: "Sorry, I encountered an error. Please try again." };
-      setMessages((prev) => [...prev, errorMessage]);
-    } finally {
-      setLoading(false);
-    }
-  };
+ const sendQuestion = async () => {
+  if (!question.trim() || !chat_id) return;
+
+  const userMessage = { role: "user", content: question };
+  setMessages((prev) => [...prev, userMessage]);
+  setQuestion("");
+  setLoading(true);
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/ai-chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chat_id,
+        message: userMessage.content
+      }),
+    });
+
+    const data = await res.json();
+
+    const botMessage = {
+      role: "bot",
+      content: data.response, // ✅ FIXED
+    };
+
+    setMessages((prev) => [...prev, botMessage]);
+  } catch (err) {
+    console.error(err);
+    setMessages((prev) => [
+      ...prev,
+      { role: "bot", content: "Something went wrong. Try again." }
+    ]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
