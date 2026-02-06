@@ -89,9 +89,11 @@ export const extractText = async (req, res) => {
             allData = JSON.parse(existingContent);
         }
 
+        let id = `chat_${Math.random().toString(36).substr(2, 9)}`;
+
         // Add new entry
         const newEntry = {
-            chatId: `chat_${Math.random().toString(36).substr(2, 9)}`, // Added generic random chat ID
+            chatId: id,
             fileName: fileName,
             timestamp: new Date().toISOString(),
             documentText: fullText
@@ -113,6 +115,7 @@ export const extractText = async (req, res) => {
         }
 
         res.json({ 
+            chatId: id,
             text: fullText,
             jsonFile: jsonFilePath 
         });
