@@ -5,9 +5,9 @@ const jsonFilePath =
           'C:/Users/Madhav/OneDrive/Desktop/main_project/Labellerr AI/server/data/extracted_data.json';
 
 
-const getAllExtractedData = () => {
+export function getAllExtractedData() {
     try {
-        
+
         console.log('Checking:', jsonFilePath);
 
         if (!fs.existsSync(jsonFilePath)) {
@@ -22,8 +22,8 @@ const getAllExtractedData = () => {
         console.error('Error reading extracted data:', error);
         throw new Error('Failed to read extracted data');
     }
-};
-const getExtractedDataByChatId = (chatId) => {
+}
+ export function getExtractedDataByChatId(chatId) {
     try {
 
 
@@ -42,5 +42,8 @@ const getExtractedDataByChatId = (chatId) => {
         console.error('Error reading extracted data:', error);
         throw new Error('Failed to read extracted data');
     }
-};
+}
+
+console.log('', getExtractedDataByChatId('chat_7mfqal5g9'));
+
 
